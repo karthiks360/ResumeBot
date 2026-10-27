@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Resume Bot</title>
+<style>
+  /* Brand palette - edit these to match the RVCE site exactly. */
+  :root {
+    --brand: #0b2a5b;        /* header bar, user bubbles, send button */
+    --brand-text: #ffffff;
+    --gold: #f2a900;         /* header accent stripe, focus ring, chip hover */
+    --bg: #f4f6fa;
+    --panel: #ffffff;
+    --border: #dde3ec;
+    --text: #14213d;
+    --muted: #5b6577;
+    --accent: var(--brand);
+    --accent-text: var(--brand-text);
+    --bot-bg: #eef2f8;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --brand: #0b2a5b;
+      --brand-text: #ffffff;
+      --gold: #f5b82e;
+      --bg: #0b1220;
+      --panel: #0f1828;
+      --border: #22304a;
+      --text: #e6ebf3;
+      --muted: #9aa6ba;
+      --accent: #2c5aa8;
+      --accent-text: #ffffff;
+      --bot-bg: #18233a;
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  .app {
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;          /* avoids the mobile address-bar jump */
+    display: flex;
+    flex-direction: column;
+    background: var(--panel);
+  }
+  header {
+    padding: 16px 32px;
+    background: var(--brand);
+    color: var(--brand-text);
+    border-bottom: 4px solid var(--gold);
+  }
+  header h1 { margin: 0; font-size: 20px; font-weight: 600; letter-spacing: .2px; }
+  header p { margin: 2px 0 0; font-size: 13px; opacity: .85; }
+  #log {
+    flex: 1;
+    overflow-y: auto;
+    padding: 28px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    background: var(--bg);
+  }
+  .msg { max-width: min(75%, 900px); padding: 11px 15px; border-radius: 14px; white-space: pre-wrap; word-wrap: break-word; }
+  .user { align-self: flex-end; background: var(--accent); color: var(--accent-text); border-bottom-right-radius: 4px; }
+  .bot  { align-self: flex-start; background: var(--panel); border: 1px solid var(--border); border-left: 3px solid var(--gold); border-bottom-left-radius: 4px; }
+  .bot.error { color: #d94848; border-left-color: #d94848; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; padding: 14px 32px 0; background: var(--panel); border-top: 1px solid var(--border); }
+  .chip {
+    font: inherit; font-size: 13px; cursor: pointer;
+    background: transparent; color: var(--muted);
+    border: 1px solid var(--border); border-radius: 999px; padding: 6px 13px;
+  }
+  .chip:hover { color: var(--text); border-color: var(--gold); background: color-mix(in srgb, var(--gold) 12%, transparent); }
+  form { display: flex; gap: 10px; padding: 14px 32px 20px; background: var(--panel); }
+  @media (max-width: 600px) {
+    header, #log { padding-left: 16px; padding-right: 16px; }
+    .chips, form { padding-left: 16px; padding-right: 16px; }
+    .msg { max-width: 90%; }
+  }
+  input[type=text] {
+    flex: 1; font: inherit; padding: 11px 15px; color: var(--text);
+    background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+  }
+  input[type=text]:focus { outline: 2px solid var(--gold); outline-offset: -1px; }
+  button[type=submit] {
+    font: inherit; font-weight: 500; cursor: pointer; padding: 11px 20px;
+    background: var(--accent); color: var(--accent-text);
+    border: none; border-radius: 10px;
+  }
+  button[type=submit]:disabled { opacity: .5; cursor: default; }
+  .cursor::after { content: "▍"; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>Resume Bot</h1>
+    <p>Ask anything about the candidate&rsquo;s background &mdash; answers come only from the resume.</p>
+  </header>
+
+  <div id="log">
+    <div class="msg bot">Hi. I can answer questions about Arjun Mehta&rsquo;s resume &mdash; experience, skills, certifications, projects. What would you like to know?</div>
+  </div>
+
+  <div class="chips">
+    <button class="chip">Summarise their experience</button>
+    <button class="chip">What AWS services do they know?</button>
+    <button class="chip">Which certifications do they hold?</button>
+    <button class="chip">Why hire them for a cloud security role?</button>
+  </div>
+
+  <form id="form" autocomplete="off">
+    <input id="input" type="text" placeholder="Ask about experience, skills, projects&hellip;" required />
+    <button id="send" type="submit">Send</button>
+  </form>
+</div>
+
+<script>
+const log = document.getElementById("log");
+const form = document.getElementById("form");
+const input = document.getElementById("input");
+const send = document.getElementById("send");
+const history = [];
+
+function bubble(text, cls) {
+  const el = document.createElement("div");
+  el.className = "msg " + cls;
+  el.textContent = text;
+  log.appendChild(el);
+  log.scrollTop = log.scrollHeight;
+  return el;
+}
+
+document.querySelectorAll(".chip").forEach(chip => {
+  chip.addEventListener("click", () => ask(chip.textContent));
+});
+
+form.addEventListener("submit", e => {
+  e.preventDefault();
+  const text = input.value.trim();
+  if (text) ask(text);
+});
+
+async function ask(message) {
+  input.value = "";
+  input.disabled = send.disabled = true;
+  bubble(message, "user");
+
+  const reply = bubble("", "bot");
+  reply.classList.add("cursor");
+  let full = "";
+
+  try {
+    const res = await fetch("/chat/stream", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message, history: history.slice(-16) })
+    });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+
+      const lines = buffer.split("\n");
+      buffer = lines.pop();                       // keep the partial line
+
+      for (const line of lines) {
+        if (!line.startsWith("data: ")) continue;
+        const payload = line.slice(6);
+        if (payload === "[DONE]") continue;
+        const data = JSON.parse(payload);
+        if (data.error) throw new Error(data.error);
+        full += data.token;
+        reply.textContent = full;
+        log.scrollTop = log.scrollHeight;
+      }
+    }
+
+    history.push({ role: "user", content: message });
+    history.push({ role: "assistant", content: full });
+  } catch (err) {
+    reply.classList.add("error");
+    reply.textContent = "Could not reach the model: " + err.message;
+  } finally {
+    reply.classList.remove("cursor");
+    input.disabled = send.disabled = false;
+    input.focus();
+  }
+}
+</script>
+</body>
+</html>

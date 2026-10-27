@@ -1,0 +1,163 @@
+===============================================================================
+ARJUN MEHTA
+Senior Cloud Security Engineer
+===============================================================================
+Location:   Bengaluru, Karnataka, India (open to hybrid / remote)
+Email:      arjun.mehta@example.com
+Phone:      +91 98XXX 41122
+LinkedIn:   linkedin.com/in/arjunmehta-example
+GitHub:     github.com/arjunmehta-example
+Languages:  English (fluent), Hindi (native), Kannada (conversational)
+
+-------------------------------------------------------------------------------
+PROFESSIONAL SUMMARY
+-------------------------------------------------------------------------------
+Cloud security engineer with 7+ years of experience securing AWS and
+multi-cloud workloads for regulated fintech and payments companies. Specialist
+in PCI-DSS compliance automation, infrastructure-as-code security, and
+detection engineering. Led the migration of a 400-instance EC2 estate to a
+zero-trust network architecture, cutting the externally reachable attack
+surface by 72%. Comfortable owning a problem end to end: threat model, build,
+automate, and hand over with runbooks the on-call team actually uses.
+
+-------------------------------------------------------------------------------
+CORE SKILLS
+-------------------------------------------------------------------------------
+Cloud & Infrastructure
+  AWS (EC2, VPC, IAM, S3, KMS, GuardDuty, Security Hub, CloudTrail, Config,
+  Lambda, EKS, Systems Manager, WAF, Secrets Manager), Azure (AD, Sentinel -
+  working knowledge), Terraform, CloudFormation, Docker, Kubernetes, Helm
+
+Security
+  Threat modelling (STRIDE), PCI-DSS v4.0, ISO 27001, SOC 2 Type II,
+  penetration testing, SAST/DAST pipelines, SIEM engineering, incident
+  response, vulnerability management, CIS Benchmarks, zero-trust networking
+
+Languages & Tooling
+  Python (primary), Go (intermediate), Bash, SQL, FastAPI, Boto3, Ansible,
+  GitHub Actions, GitLab CI, Jenkins, Splunk, Elastic Stack, Wazuh, Prometheus,
+  Grafana, Nessus, Burp Suite, Semgrep, Trivy, Checkov, OpenSearch
+
+-------------------------------------------------------------------------------
+PROFESSIONAL EXPERIENCE
+-------------------------------------------------------------------------------
+
+Senior Cloud Security Engineer
+NorthBridge Payments Pvt. Ltd. - Bengaluru, India
+March 2022 - Present
+
+  - Own the cloud security posture for a payments platform processing ~2.1M
+    transactions/day across 3 AWS regions and 14 accounts.
+  - Designed and rolled out a zero-trust network architecture across a
+    400-instance EC2 estate, replacing flat VPC peering with segmented
+    workloads, VPC endpoints, and SSM Session Manager in place of bastion
+    SSH. Reduced internet-exposed surface by 72% and eliminated all 0.0.0.0/0
+    inbound SSH rules.
+  - Built a Terraform guardrail pipeline (Checkov + custom OPA policies in
+    GitHub Actions) that blocks non-compliant infrastructure before merge.
+    Caught 1,140+ misconfigurations in the first year; mean time to remediate
+    dropped from 11 days to under 2 hours.
+  - Automated 83% of PCI-DSS v4.0 technical evidence collection using Python,
+    Boto3, and AWS Config aggregators. Cut audit preparation from 6 weeks to
+    5 days and passed two consecutive audits with zero technical findings.
+  - Engineered 60+ Splunk detections mapped to MITRE ATT&CK, covering IAM
+    privilege escalation, anomalous STS AssumeRole chains, and S3 exfiltration.
+    Improved true-positive rate from 31% to 78% by adding asset-criticality
+    enrichment.
+  - Led incident response for a credential-stuffing campaign in Nov 2023:
+    contained in 38 minutes, authored the postmortem, and shipped adaptive
+    rate limiting at the WAF layer that cut malicious login volume by 94%.
+  - Mentors 4 junior engineers; runs a fortnightly internal "break the build"
+    secure-coding workshop.
+
+Cloud Security Engineer
+Veritas Financial Systems - Pune, India
+July 2019 - February 2022
+
+  - Migrated 120 legacy on-premise workloads to AWS, designing the landing
+    zone, IAM permission boundaries, and KMS key hierarchy from scratch.
+  - Implemented centralised logging (CloudTrail org trail to S3 to Elastic)
+    across 9 accounts, giving the SOC its first unified audit trail.
+  - Reduced critical findings from recurring quarterly penetration tests by
+    68% over 18 months by driving fixes with product teams rather than filing
+    tickets and walking away.
+  - Introduced Trivy and Semgrep into 23 CI pipelines; established an SLA
+    model (critical: 7 days, high: 30 days) adopted org-wide.
+  - Built an internal secrets-rotation service in Python that rotated 300+
+    database credentials on a 30-day cycle, retiring a spreadsheet-based
+    process.
+
+Security Analyst
+Cerulean InfoTech - Hyderabad, India
+June 2017 - June 2019
+
+  - Triaged ~150 SIEM alerts per week in a 24x7 SOC; escalated and documented
+    confirmed incidents.
+  - Performed network and web application vulnerability assessments for 30+
+    client engagements using Nessus and Burp Suite.
+  - Automated recurring compliance reporting with Python and Bash, saving the
+    team roughly 20 hours per month.
+  - Authored the first SOC analyst onboarding playbook, still in use today.
+
+-------------------------------------------------------------------------------
+EDUCATION
+-------------------------------------------------------------------------------
+M.Tech, Information Security
+National Institute of Technology, Warangal | 2015 - 2017
+  CGPA 8.7/10. Thesis: "Side-Channel Resistant Key Management for
+  Multi-Tenant Cloud Environments."
+
+B.E., Computer Science and Engineering
+Visvesvaraya Technological University, Belagavi | 2011 - 2015
+  First Class with Distinction, 78.4%.
+
+-------------------------------------------------------------------------------
+CERTIFICATIONS
+-------------------------------------------------------------------------------
+  - AWS Certified Security - Specialty (2023, valid to 2026)
+  - AWS Certified Solutions Architect - Professional (2022, valid to 2025)
+  - Offensive Security Certified Professional (OSCP) - 2021
+  - Certified Information Systems Security Professional (CISSP) - 2024
+  - Certified Kubernetes Administrator (CKA) - 2022
+  - HashiCorp Certified: Terraform Associate - 2021
+
+-------------------------------------------------------------------------------
+SELECTED PROJECTS
+-------------------------------------------------------------------------------
+drift-sentinel (open source, 600+ GitHub stars)
+  Terraform state drift detector written in Go. Compares live AWS resources
+  against committed state and opens annotated pull requests describing the
+  delta. Used in production by at least 12 organisations.
+
+iam-least-privilege-advisor
+  Python tool that parses 90 days of CloudTrail history and generates
+  minimum-viable IAM policies from actual API usage. Shrank over-permissioned
+  roles by an average of 61% across 200 roles internally.
+
+pci-evidence-collector
+  Internal Python/Boto3 framework mapping AWS Config rules and Security Hub
+  findings to PCI-DSS v4.0 control IDs, emitting auditor-ready evidence packs.
+
+-------------------------------------------------------------------------------
+TALKS, WRITING & COMMUNITY
+-------------------------------------------------------------------------------
+  - Speaker, Nullcon Goa 2024 - "Breaking and Fixing AssumeRole Chains"
+  - Speaker, BSides Bangalore 2023 - "Your IaC Pipeline Is Your New Perimeter"
+  - Author of 14 posts on cloud security engineering (~45k cumulative reads)
+  - OWASP Bengaluru chapter volunteer since 2021
+  - Reviewer for two CNCF security whitepapers (2023, 2024)
+
+-------------------------------------------------------------------------------
+AWARDS
+-------------------------------------------------------------------------------
+  - NorthBridge "Engineering Excellence" award, 2024 - zero-trust migration
+  - Veritas "Rookie of the Year", 2020
+  - Winner, NIT Warangal inter-college CTF, 2016
+
+-------------------------------------------------------------------------------
+PREFERENCES
+-------------------------------------------------------------------------------
+  Target roles:    Staff/Principal Cloud Security Engineer, Security
+                   Architect, Head of Cloud Security
+  Notice period:   60 days
+  Work authorisation: Indian citizen; no sponsorship required for India roles
